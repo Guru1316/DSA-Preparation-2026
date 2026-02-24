@@ -115,3 +115,154 @@ atlast if we convert it into base 10 then it will be
 
 1 bit each in 0th and 1th positions
 so it is 3..
+
+
+There is another one more optimized method with linear time complexity
+
+Solution in CPP:
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int o = 0;
+        int t = 0;
+        for(int n : nums)
+        {
+            o = ((o^n) & (~t));
+            t = ((t^n) & (~o));
+        }
+        return o;
+    }
+};
+
+Explanation:
+
+Here first declare and initialize two variables o = 0 and t = 0
+
+using loop traverse over array
+
+for o, first do xor of o with n and (&) with (not)t
+for t, first do xor of t with n and (&) with (not)of
+
+after coming out of loop return of
+
+Example 1:
+
+Input: nums = [2,2,3,2]
+
+Here,
+
+first traverse over array
+
+1) n = 2 , o = 0, t = 0
+   o = ((o^n) & (~t))
+
+   o^n = 0^2 => 0 0
+                1 0
+            ^ =>1 0 => 2
+    ~t = ~0  => ~(0 0) = 1 1 => 3
+    (o^n) & (~t) = 2 & 3 = 1 0
+                           1 1
+                       & =>1 0 = 2
+
+    o = 2, t = 0
+
+   t = ((t^n) & (~o))
+
+   t^n = 0^2 => 0 0
+                1 0
+            ^ =>1 0 => 2
+    ~o = ~2  => ~(1 0) = 0 1 => 1
+    (t^n) & (~o) = 2 & 1 = 1 0
+                           0 1
+                       & =>0 0 = 0
+
+    o = 2, t = 0
+
+
+2) n = 2 , o = 2, t = 0
+   o = ((o^n) & (~t))
+
+   o^n = 2^2 => 1 0
+                1 0
+            ^ =>0 0 => 0
+    ~t = ~0  => ~(0 0) = 1 1 => 3
+    (o^n) & (~t) = 0 & 3 = 0 0
+                           1 1
+                       & =>0 0 = 0
+
+    o = 0, t = 0
+
+   t = ((t^n) & (~o))
+
+   t^n = 0^2 => 0 0
+                1 0
+            ^ =>1 0 => 2
+    ~o = ~0  => ~(0 0) = 1 1 => 3
+    (t^n) & (~o) = 2 & 3 = 1 0
+                           1 1
+                       & =>1 0 = 2
+
+    o = 0, t = 2
+
+
+3) n = 3 , o = 0, t = 2
+   o = ((o^n) & (~t))
+
+   o^n = 0^3 => 0 0
+                1 1
+            ^ =>1 1 => 3
+    ~t = ~2  => ~(1 0) = 0 1 => 1
+    (o^n) & (~t) = 3 & 1 = 1 1
+                           0 1
+                       & =>0 1 = 1
+
+    o = 1, t = 2
+
+   t = ((t^n) & (~o))
+
+   t^n = 2^3 => 1 0
+                1 1
+            ^ =>0 1 => 1
+    ~o = ~0  => ~(0 1) = 1 0 => 2
+    (t^n) & (~o) = 1 & 2 = 0 1
+                           1 0
+                       & =>0 0 = 0
+
+    o = 1, t = 0
+
+
+4) n = 2 , o = 1, t = 0
+   o = ((o^n) & (~t))
+
+   o^n = 1^2 => 0 1
+                1 0
+            ^ =>1 1 => 3
+    ~t = ~0 => ~(0 0) = 1 1 => 3
+    (o^n) & (~t) = 3 & 3 = 1 1
+                           1 1
+                       & =>1 1 = 3
+
+    o = 3, t = 0
+
+   t = ((t^n) & (~o))
+
+   t^n = 0^2 => 0 0
+                1 0
+            ^ =>1 0 => 2
+    ~o = ~0  => ~(1 1) = 0 0 => 0
+    (t^n) & (~o) = 2 & 0 = 1 0
+                           0 0
+                       & =>0 0 = 0
+
+    o = 3, t = 0
+
+return o
+
+which is 3 and 3 is the answer 
+
+this is counting the count of each value if it appears for one time it goes to ones(o) if it appears for two times it goes to twos(t)
+and gets out of ones(o)  
+if it appears for 3 times then it will go out 
+
+so returning ones(o) will give the answer because the answer will appear only once in the array
