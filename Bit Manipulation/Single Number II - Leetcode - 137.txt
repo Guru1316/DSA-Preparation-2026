@@ -1,0 +1,117 @@
+Leetcode - 137
+
+Link : https://leetcode.com/problems/single-number-ii/description/
+
+137 - Single Number II
+
+Given an integer array nums where every element appears three times except for one, which appears exactly once. Find the single element and return it.
+
+You must implement a solution with a linear runtime complexity and use only constant extra space.
+
+ 
+
+Example 1:
+
+Input: nums = [2,2,3,2]
+Output: 3
+Example 2:
+
+Input: nums = [0,1,0,1,0,1,99]
+Output: 99
+ 
+
+Constraints:
+
+1 <= nums.length <= 3 * 104
+-231 <= nums[i] <= 231 - 1
+Each element in nums appears exactly three times except for one element which appears once.
+
+
+Solution in CPP :
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int ans = 0;
+        for(int i=0;i<=31;i++)
+        {
+            int c = 0;
+            for(int n : nums)
+            {
+                if(n&(1<<i))
+                {
+                    c++;
+                }
+            }
+            if(c%3==1)
+            {
+                ans|=(1<<i);
+            }
+        }
+        return ans;
+    }
+};
+
+Explanation : 
+
+First setting ans = 0 
+Then running a loop from 0 to 31 as it is given in the constraint
+then setting c(count) variable to 0
+
+then running a loop for traversing the array values and checking a condition(n & (1<<i) != 0) whether the bit of each number has set bits then increment c 
+after coming out of the inner loop check whether c % 3 == 1 if yes then make the ans variable ith bit that is the index of current iteration into a set bit by using this line 
+ans = (ans | (1<<i))
+
+Then repeat it again for all 0 to 31 bitindices
+
+at last return ans that will be the answer
+
+Example 1:
+
+Input: nums = [2,2,3,2]
+
+ans = 0, c = 0, i = 0
+ 1) i = 0 => 2 & (1<<0) = 2 & 1 = 0
+             2 & (1<<0) = 2 & 1 = 0
+             3 & (1<<0) = 3 & 1 = 1 => c = 1
+             2 & (1<<0) = 2 & 1 = 0
+
+        c % 3 => 1 % 3 = 1 so,
+        
+        ans = ans | (1<<i) => 0 | (1<<0) => 0 | 1 = 1
+        ans = 1
+
+ans = 1, c = 0, i = 1
+ 2) i = 1 => 2 & (1<<1) = 2 & 2 = 2 => c = 1
+             2 & (1<<1) = 2 & 2 = 2 => c = 2
+             3 & (1<<1) = 3 & 2 = 2 => c = 3
+             2 & (1<<1) = 2 & 2 = 2 => c = 4
+
+        c % 3 => 4 % 3 = 1 so,
+
+        ans = ans | (1<<i) => 1 | (1<<1) => 1 | 2 = 3
+        ans = 3
+
+        The answer is 3.
+
+hereafter no changes happens but still it runs fully that is upto 31
+
+This is happening because
+
+2 -> 0 1 0
+2 -> 0 1 0
+3 -> 0 1 1
+2 -> 0 1 0
+
+Here 0th position has 1 set bit , as they gave that there will three pairs of numbers will be there we can mod the total number of set bits at ith position by 3
+if it is 1 means (2 is not possible ) only 0 and 1 is possible because either the total no of bits will come under 3rd table as it has 3 pairs else it will be 1 if we mod by 3 because only one number is alone no pair of numbers
+
+so here in 0th position only 1 bit so 1 in 0th position is added 
+in 1th position 4 set bits 4%3 = 1 so 1 bit in 1th position 
+
+goes on...
+
+atlast if we convert it into base 10 then it will be 
+
+1 bit each in 0th and 1th positions
+so it is 3..
