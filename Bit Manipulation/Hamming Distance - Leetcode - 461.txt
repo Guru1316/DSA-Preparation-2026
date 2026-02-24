@@ -1,0 +1,125 @@
+Leetcode - 461
+
+Link - https://leetcode.com/problems/hamming-distance/description/
+
+461 - Hamming distance
+
+
+The Hamming distance between two integers is the number of positions at which the corresponding bits are different.
+
+Given two integers x and y, return the Hamming distance between them.
+
+ 
+
+Example 1:
+
+Input: x = 1, y = 4
+Output: 2
+Explanation:
+1   (0 0 0 1)
+4   (0 1 0 0)
+       ↑   ↑
+The above arrows point to positions where the corresponding bits are different.
+Example 2:
+
+Input: x = 3, y = 1
+Output: 1
+ 
+
+Constraints:
+
+0 <= x, y <= 231 - 1
+
+
+Solution in CPP:
+
+class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        int c = 0;
+        int z = x^y;
+        while(z)
+        {
+            if(z & 1)
+            {
+                c++;
+            }
+            z >>= 1;
+        }
+        return c;
+    }
+};
+
+
+Explanation:
+
+Here first declare and initialize c(count) = 0
+then (xor) x and y and store it in z
+
+then using loop until z gets 0 condition 
+check if z & 1 == 1 if yes then increment c by 1
+then right shift(>>) z by 1 
+after coming out of loop return c and it will be the answer
+
+
+Example 1:
+
+Input: x = 1, y = 4
+
+first step is xor of x and y
+which x^y => 1^4 => 0001
+                    0100
+               ^ => 0101 => 5 => z
+
+next using loop check z is o or not
+
+Iterations:
+
+c = 0
+1) z = 5 which is not equal to 0, so loop executes
+   
+   if z & 1 != 0 => 5 & 1 => 0101
+                             0001
+                        & => 0001 => 1 , it is 1 so c gets incremented so, c = 1
+    
+   z >>= 1 => 5 >>= 1 => z = 0101 >> 1 => 0010 => 2
+   z = 2
+
+c = 1
+2) z = 2 which is not equal to 0, so loop executes
+   
+   if z & 1 != 0 => 2 & 1 => 0010
+                             0001
+                        & => 0000 => 0 , it is 0 so c = 0
+    
+   z >>= 1 => 2 >>= 1 => z = 0010 >> 1 => 0001 => 1
+   z = 1
+
+c = 1
+3) z = 1 which is not equal to 0, so loop executes
+   
+   if z & 1 != 0 => 1 & 1 => 0001
+                             0001
+                        & => 0001 => 1 , it is 1 so c gets incremented so, c = 2
+    
+   z >>= 1 => 1 >>= 1 => z = 0001 >> 1 => 0000 => 0
+   z = 0
+
+c = 2
+4) z = 0 which is equal to 0, so it gets out of the loop
+
+returns c which is 2 and it is the answer
+
+this is happening because 
+
+in normal view,
+
+x = 1 => 0001
+y = 4 => 0100
+
+the no of bits differing at positions are 2(which is 0th position in x and 2nd position in y)
+
+to achieve this we are doing the above operations 
+xor only considers only the different bits so we get the positions of different bits in the answer of xor 
+
+then using loop we are just counting the set bits to get the answer 
