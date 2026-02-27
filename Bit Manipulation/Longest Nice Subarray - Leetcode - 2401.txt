@@ -1,0 +1,170 @@
+Leetcode - 2401
+
+Link - https://leetcode.com/problems/longest-nice-subarray/description/
+
+2401 - Longest Nice Subarray 
+
+
+You are given an array nums consisting of positive integers.
+
+We call a subarray of nums nice if the bitwise AND of every pair of elements that are in different positions in the subarray is equal to 0.
+
+Return the length of the longest nice subarray.
+
+A subarray is a contiguous part of an array.
+
+Note that subarrays of length 1 are always considered nice.
+
+ 
+
+Example 1:
+
+Input: nums = [1,3,8,48,10]
+Output: 3
+Explanation: The longest nice subarray is [3,8,48]. This subarray satisfies the conditions:
+- 3 AND 8 = 0.
+- 3 AND 48 = 0.
+- 8 AND 48 = 0.
+It can be proven that no longer nice subarray can be obtained, so we return 3.
+Example 2:
+
+Input: nums = [3,1,5,11,13]
+Output: 1
+Explanation: The length of the longest nice subarray is 1. Any subarray of length 1 can be chosen.
+ 
+
+Constraints:
+
+1 <= nums.length <= 105
+1 <= nums[i] <= 109
+
+
+
+Solution in CPP:
+
+class Solution {
+public:
+    int longestNiceSubarray(vector<int>& nums) {
+        int n = nums.size();
+        int mws = 0;
+        int l = 0, r = 0;
+        int cs = 0, xs = 0;
+        while(r < n)
+        {
+            cs += nums[r];
+            xs ^= nums[r];
+            while(cs != xs)
+            {
+                cs -= nums[l];
+                xs ^= nums[l];
+                l++;
+            }
+            mws = max(mws, r-l+1);
+            r++;
+        }
+        return mws;
+    }
+};
+
+
+Explanation:
+
+first declare n and assign the nums size to it
+then declare variables mws(max_window_size) = 0, l(left) = 0, r(right) = 0, cs(current_sum) = 0, xs(xor_sum) = 0
+
+then run a loop until the condition r<n is true
+
+add the value at position r in nums with cs and store it in cs
+xor the value at position r in nums with xs and store it in xs
+
+then again run a nested loop with a condition if cs and xs is not equal it executes
+subtract the value at position l in nums with cs and store it in cs
+xor the value at position l in nums with xs and store it in xs
+then increment l by 1 until the condition fails
+
+after coming out of loop find the maximum value between mws and r-l+1 and store it in mws and increment r by 1
+after coming out of outer loop
+
+return mws and it is the answer
+
+
+Example 1:
+
+Input: nums = [1,3,8,48,10]
+
+here first,
+n = nums size => n = 5
+mws = 0, l = 0, r = 0, cs = 0, xs = 0
+
+here we are using both bit manipulation and two pointer window also
+we can say that if both numbers have set bits at any one of the position the answer will be a non zero value because it is bitwise AND
+so let's do xor and we have one more thing that 
+a+b will be equal a^b if there is not set bit matching between both numbers that means a&b is 0
+if it is not equal means we should move to the next set of numbers so we are using two pointers l(left) and r(right) 
+
+now run a loop with a condition r < n that 0 < 5
+
+1) r<n => 0 < 5 true
+   mws = 0, l = 0, r = 0, cs = 0, xs = 0
+   cs = cs + nums[r] = 0 + nums[0] = 0 + 1 = 1
+   xs = xs ^ nums[r] = 0 ^ nums[0] = 0 ^ 1 = 1
+   cs != xs => 1!=1 false so inner loop never executes
+   mws = max(mws, r-l+1) = max(0, 0-0+1) = max(0, 1) = 1
+   mws = 1
+   increment r by 1 => r = 1 
+
+2) r<n => 1 < 5 true
+   mws = 1, l = 0, r = 1, cs = 1, xs = 1
+   cs = cs + nums[r] = 1 + nums[1] = 1 + 3 = 4
+   xs = xs ^ nums[r] = 1 ^ nums[1] = 1 ^ 3 = 2
+   cs != xs => 4!=2 true so inner loop executes
+               1) cs != xs => 4!=2 true 
+                  cs = 4, xs = 2, l = 0
+                  cs = cs - nums[l] = 4 - nums[0] = 4 - 1 = 3
+                  xs = xs ^ nums[l] = 2 ^ nums[0] = 2 ^ 1 = 3
+                  increment l by 1 , so l = 1
+                  gets out of loop because condition fails
+   mws = max(mws, r-l+1) = max(1, 1-1+1) = max(1, 1) = 1
+   increment r by 1 => r = 2
+
+3) r<n => 2 < 5 true
+   mws = 1, l = 1, r = 2, cs = 3, xs = 3
+   cs = cs + nums[r] = 3 + nums[2] = 3 + 8 = 11
+   xs = xs ^ nums[r] = 3 ^ nums[2] = 3 ^ 8 = 11
+   cs != xs => 11!=11 false so inner loop never executes
+   mws = max(mws, r-l+1) = max(1, 2-1+1) = max(1, 2) = 2
+   mws = 2
+   increment r by 1 => r = 3 
+
+4) r<n => 3 < 5 true
+   mws = 2, l = 1, r = 3, cs = 11, xs = 11
+   cs = cs + nums[r] = 11 + nums[3] = 11 + 48 = 59
+   xs = xs ^ nums[r] = 11 ^ nums[3] = 11 ^ 48 = 59
+   cs != xs => 59!=59 false so inner loop never executes
+   mws = max(mws, r-l+1) = max(2, 3-1+1) = max(2, 3) = 3
+   mws = 3
+   increment r by 1 => r = 4
+
+5) r<n => 4 < 5 true
+   mws = 3, l = 1, r = 4, cs = 59, xs = 59
+   cs = cs + nums[r] = 59 + nums[4] = 59 + 10 = 69
+   xs = xs ^ nums[r] = 59 ^ nums[4] = 59 ^ 10 = 49
+   cs != xs => 69!=49 true so inner loop executes
+               1) cs != xs => 69!=49 true 
+                  cs = 69, xs = 49, l = 1
+                  cs = cs - nums[l] = 69 - nums[1] = 69 - 3 = 66
+                  xs = xs ^ nums[l] = 49 ^ nums[1] = 49 ^ 3 = 50
+                  increment l by 1 , so l = 2
+                2) cs != xs => 66!=50 true 
+                  cs = 66, xs = 50, l = 2
+                  cs = cs - nums[l] = 66 - nums[2] = 66 - 8 = 58
+                  xs = xs ^ nums[l] = 50 ^ nums[1] = 50 ^ 8 = 58
+                  increment l by 1 , so l = 3
+                  gets out of loop because condition fails
+   mws = max(mws, r-l+1) = max(3, 3-3+1) = max(3, 1) = 3
+   increment r by 1 => r = 5
+
+6) r<n => 5<5 false
+condition fails comes out of loop 
+
+return mws = 3 and that is the answer
