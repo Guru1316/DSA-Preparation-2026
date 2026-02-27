@@ -1,0 +1,159 @@
+Leetcode - 2429
+
+Link - https://leetcode.com/problems/minimize-xor/description/
+
+2429 - Minimize XOR
+
+
+Given two positive integers num1 and num2, find the positive integer x such that:
+
+x has the same number of set bits as num2, and
+The value x XOR num1 is minimal.
+Note that XOR is the bitwise XOR operation.
+
+Return the integer x. The test cases are generated such that x is uniquely determined.
+
+The number of set bits of an integer is the number of 1's in its binary representation.
+
+ 
+
+Example 1:
+
+Input: num1 = 3, num2 = 5
+Output: 3
+Explanation:
+The binary representations of num1 and num2 are 0011 and 0101, respectively.
+The integer 3 has the same number of set bits as num2, and the value 3 XOR 3 = 0 is minimal.
+Example 2:
+
+Input: num1 = 1, num2 = 12
+Output: 3
+Explanation:
+The binary representations of num1 and num2 are 0001 and 1100, respectively.
+The integer 3 has the same number of set bits as num2, and the value 3 XOR 1 = 2 is minimal.
+ 
+
+Constraints:
+
+1 <= num1, num2 <= 109
+
+
+
+Solution in CPP:
+
+class Solution {
+public:
+    int minimizeXor(int num1, int num2) {
+        int c = __builtin_popcount(num2);
+
+        int res = 0;
+
+        for(int i=31;i>=0 && c;i--)
+        {
+            if((num1 & (1<<i)))
+            {
+                c--;
+                res+=(1<<i);
+            }
+        }
+
+        for(int i=0;i<=31 && c;i++)
+        {
+            if((num1 & (1<<i))==0)
+            {
+                c--;
+                res+=(1<<i);
+            }
+        }
+
+        return res;
+    }
+};
+
+
+
+Explanation:
+
+first declare c and using __builtin_popcount function find the no of set bits in num2 and store it in c
+then declare res and set it to 0
+
+then run a loop from 31 to 0 with a condition c!=0 and decrement iterating variable by 1
+inside the loop check a condition whether the ith position in num1's binary representation is a set bit or not 
+if it is a set bit decrement c(count) by 1 and add a set bit to the ith position of res
+do it until it come out of loop
+
+then again run a loop from 0 to 31 with a condition c!=0 and increment iterating variable by 1
+inside the loop check a condition whether the ith position in num1's binary representation is a set bit or not 
+if it is not a set bit decrement c(count) by 1 and add a set bit to the ith position of res
+do it until it come out of loop
+
+after coming out of loop
+return res and that is the answer 
+
+
+Example 1:
+
+Input: num1 = 1, num2 = 12
+
+first we should find the no of set bits in num2
+
+we can use __builtin_popcount to find it and store it in c(count)
+
+num2 = 12 => 1100 => 2
+so,  c = 2
+
+set res = 0
+
+num1 = 1 => 0001
+
+loop starts from 31 but we can skip the iterations here where the condition fails 
+here the condition is if ith bit is set bit or not 
+if it is a set bit it executes else not
+
+(This loop is to cancel all the set bits in num1 to get minimal value so num1 will be xorEd with res so if we add set bit to the positions in res where 
+there is also a set bit in num1 means we get 0 there 1^1 = 0 and that's why we are running the loop from highest bit to lowest bit)
+
+Iterations:
+
+1) i = 0 , num1 = 1 => 0001, c = 2, res = 0
+num1 & (1<<i) => 0001 & 0001 => 0001 = 1
+so decrement c ,so c = 1 
+and res = res + (1<<i) => 0 + 1 => 1
+so, res = 1
+
+gets out of loop
+
+
+
+loop starts from 0 but we can skip the iterations here where the condition fails 
+here the condition is if ith bit is set bit or not 
+if it is not a set bit it executes else not
+
+(This loop is to add all the remaining set bits to match the count of set bits in num2 which is to make c = 0
+here the condition is checking for a position where it is not a set bit because we already filled the set positions with a set bit in res
+To get minimal value we are running the loop and filling the set bit from lowest bit to highest bit)
+
+Iterations:
+
+1) i = 1 , num1 = 1 => 0001, c = 1, res = 1
+num1 & (1<<i) => 0001 & 0010 => 0000 = 0
+so decrement c ,so c = 0 
+and res = res + (1<<i) => 1 + 2 => 3
+so, res = 3
+
+gets out of loop because c = 0 (it runs fully but never executes hereafter)
+
+now return the res = 3 which is the answer
+
+verification: res = 3
+
+res = 3 => 0011 => (no of set bits = 2)
+num2 = 12 => 1100 => (no of set bits = 2)
+satisfied
+
+res = 3 => 0011
+num1 = 1 => 0001
+res ^ num1 => 3 ^ 1 = 2 which is the minimal we can ever get 
+satisfied
+
+this is the Solution
