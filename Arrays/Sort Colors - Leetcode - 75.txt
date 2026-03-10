@@ -77,4 +77,86 @@ else check 2nd condition
 
 2) nums[m] == 1
 increment m by 1 m++
-else check 3rd condition (no need because)
+else check 3rd condition (no need to check condition if it fails it automatically moves to else block)
+
+3) nums[m] == 2
+if yes
+swap => nums[m] and nums[h]
+decrement h by 1 h--
+
+Do it until it comes out of loop 
+now the given vector is sorted and it will be the answer 
+
+
+Example 1:
+
+Input: nums = [2,0,2,1,1,0]
+
+first declare l = 0, m = 0, h = nums.size - 1 = 6 - 1 = 5
+l = 0 , m = 0, h = 5
+
+now iterations:
+
+1) m<=h => 0<=5 => true (loop executes)
+
+nums[m] => nums[0] = 2
+so 3rd condition executes
+swap nums[m] and nums[h]
+and decrement h by 1
+
+so now nums = [0, 0, 2, 1, 1, 2]
+l = 0 , m = 0, h = 4
+
+2) m<=h => 0<=4 => true (loop executes)
+
+nums[m] => nums[0] = 0
+so 1st condition executes
+swap nums[m] and nums[l]
+and increment l and m by 1
+
+so now nums = [0, 0, 2, 1, 1, 2]
+l = 1 , m = 1, h = 4
+
+3) m<=h => 1<=4 => true (loop executes)
+
+nums[m] => nums[1] = 0
+so 1st condition executes
+swap nums[m] and nums[l]
+and increment l and m by 1
+
+so now nums = [0, 0, 2, 1, 1, 2]
+l = 2 , m = 2, h = 4
+
+4) m<=h => 2<=4 => true (loop executes)
+
+nums[m] => nums[2] = 2
+so 3rd condition executes
+swap nums[m] and nums[h]
+and decrement h by 1
+
+so now nums = [0, 0, 1, 1, 2, 2]
+l = 2, m = 2, h = 3
+
+5) m<=h => 2<=3 => true (loop executes)
+
+nums[m] => nums[2] = 1
+so 2nd condition executes
+and increment m by 1
+
+so now nums = [0, 0, 1, 1, 2, 2]
+l = 2 , m = 3, h = 3
+
+6) m<=h => 3<=3 => true (loop executes)
+
+nums[m] => nums[3] = 1
+so 2nd condition executes
+and increment m by 1
+
+so now nums = [0, 0, 1, 1, 2, 2]
+l = 2 , m = 4, h = 3
+
+7) m<=h => 4<=3 false(exits the loop)
+
+Now the nums = [0, 0, 1, 1, 2, 2] is sorted and this is the solution 
+The name of this algorithm is dutch flag algorithm 
+This is used only when the array has 0, 1, 2 values only and to sort that arrray
