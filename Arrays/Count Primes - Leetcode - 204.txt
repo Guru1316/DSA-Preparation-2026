@@ -1,0 +1,164 @@
+Leetcode - 204
+
+Link - https://leetcode.com/problems/count-primes/description/
+
+204 - Count Primes
+
+
+Given an integer n, return the number of prime numbers that are strictly less than n.
+
+ 
+
+Example 1:
+
+Input: n = 10
+Output: 4
+Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
+Example 2:
+
+Input: n = 0
+Output: 0
+Example 3:
+
+Input: n = 1
+Output: 0
+ 
+
+Constraints:
+
+0 <= n <= 5 * 106
+
+
+Solution in CPP:
+
+class Solution {
+public:
+    int countPrimes(int n) {
+        int c = 0;
+        vector<bool> p(n+1, true);
+        if(n==0 || n==1)
+        {
+            return 0;
+        }
+        for(int i=2;i<=n/2;i++)
+        {
+            if(p[i]==true)
+            {
+                c++;
+                for(int j=2*i;j<=n;j+=i)
+                {
+                    p[j] = false;
+                }
+            }
+        }
+        for(int i=(n/2)+1;i<n;i++)
+        {
+            if(p[i]==true)
+            {
+                c++;
+            }
+        }
+        return c;
+    }
+};
+
+
+Explanation:
+
+First declare c(count) = 0
+then declare a vector of type bool of size n+1 and fill it with true value called p
+
+check a condition if n==0 or n==1 means return 0 because 0 and 1 are not primes and there is no range of primes between them also
+
+then run the loop i from 2 to n/2 
+inside the loop check condition whether p[i] = true
+if true increment c by 1 and then run another loop j from 2*i to n inside it to make the multiples of i as false because it won't be prime
+
+after coming out of loop 
+run another loop i from n/2 + 1 to n-1
+inside the loop check condition whether p[i] = true
+if true increment c by 1
+
+atlast return c and that will be the count of prime numbers 
+
+
+Example 1:
+
+Input: n = 10
+
+first c = 0, p[n+1] = p[11] = {true, true, true, true, true, true, true, true, true, true, true}
+n==0 || n==1 false 
+
+loop from i = 2 to i = n/2
+iterations:
+
+n/2 = 10/2 = 5
+
+1) i = 2 ,i<=n/2 => 2<=5 true
+p[i] = p[2] == true => true => increment c by 1, c = 1
+    1)j = 2*i = 2*2 = 4 , j<=n => 4<=10 true
+      p[j] = p[4] = false
+      j = j + i = 4 + 2 = 6
+    2)j = 6, j<=n => 6<=10 true
+      p[j] = p[6] = false
+      j = j + i = 6 + 2 = 8
+    3)j = 8, j<=n => 8<=10 true
+      p[j] = p[8] = false
+      j = j + i = 8 + 2 = 10
+    4)j = 10, j<=n => 10<=10 true
+      p[j] = p[10] = false
+      j = j + i = 10 + 2 = 12
+    5)j = 12, j<=n => 12<=10 false
+i = i + 1 = 2 + 1 = 3
+c = 1
+
+2) i = 3 ,i<=n/2 => 3<=5 true
+p[i] = p[3] == true => true => increment c by 1, c = 2
+    1)j = 2*i = 2*3 = 6 , j<=n => 6<=10 true
+      p[j] = p[6] = false
+      j = j + i = 6 + 3 = 9
+    2)j = 9, j<=n => 9<=10 true
+      p[j] = p[9] = false
+      j = j + i = 9 + 3 = 12
+    3)j = 12, j<=n => 12<=10 false
+i = i + 1 = 3 + 1 = 4
+c = 2
+
+3) i = 4 ,i<=n/2 => 4<=5 true
+p[i] = p[4] == true => false 
+i = i + 1 = 4 + 1 = 5
+c = 2
+
+4) i = 5 ,i<=n/2 => 5<=5 true
+p[i] = p[5] == true => true => increment c by 1, c = 3
+    1)j = 2*i = 2*5 = 10 , j<=n => 10<=10 true
+      p[j] = p[10] = false
+      j = j + i = 10 + 5 = 15
+    2)j = 15, j<=n => 15<=10 false
+i = i + 1 = 5 + 1 = 6
+c = 3
+
+comes out of loop
+
+now another loop
+iterations: i = n/2 + 1 = (10/2) + 1 = 5 + 1 = 6
+
+c = 3
+
+1) i = 6 , i<n => 6<10 true
+   p[i] = p[6] == true => false
+   i = i + 1 = 6 + 1 = 7
+2) i = 7 , i<n => 7<10 true
+   p[i] = p[7] == true => true => increment c by 1, c = 4
+   i = i + 1 = 7 + 1 = 8
+3) i = 8 , i<n => 8<10 true
+   p[i] = p[8] == true => false
+   i = i + 1 = 8 + 1 = 9
+4) i = 9 , i<n => 9<10 true
+   p[i] = p[9] == true => false
+   i = i + 1 = 9 + 1 = 10
+5) i = 10 , i<n => 10<10 false
+
+c= 4 
+
+comes out of loop,  return c = 4 and that is the answer
