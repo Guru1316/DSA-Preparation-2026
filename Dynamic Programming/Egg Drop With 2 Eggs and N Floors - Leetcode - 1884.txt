@@ -1,0 +1,141 @@
+Leetcode - 1884
+
+Link - https://leetcode.com/problems/egg-drop-with-2-eggs-and-n-floors/description/
+
+1884 - Egg Drop With 2 Eggs and N Floors
+
+ou are given two identical eggs and you have access to a building with n floors labeled from 1 to n.
+
+You know that there exists a floor f where 0 <= f <= n such that any egg dropped at a floor higher than f will break, and any egg dropped at or below floor f will not break.
+
+In each move, you may take an unbroken egg and drop it from any floor x (where 1 <= x <= n). If the egg breaks, you can no longer use it. However, if the egg does not break, you may reuse it in future moves.
+
+Return the minimum number of moves that you need to determine with certainty what the value of f is.
+
+ 
+
+Example 1:
+
+Input: n = 2
+Output: 2
+Explanation: We can drop the first egg from floor 1 and the second egg from floor 2.
+If the first egg breaks, we know that f = 0.
+If the second egg breaks but the first egg didn't, we know that f = 1.
+Otherwise, if both eggs survive, we know that f = 2.
+Example 2:
+
+Input: n = 100
+Output: 14
+Explanation: One optimal strategy is:
+- Drop the 1st egg at floor 9. If it breaks, we know f is between 0 and 8. Drop the 2nd egg starting from floor 1 and going up one at a time to find f within 8 more drops. Total drops is 1 + 8 = 9.
+- If the 1st egg does not break, drop the 1st egg again at floor 22. If it breaks, we know f is between 9 and 21. Drop the 2nd egg starting from floor 10 and going up one at a time to find f within 12 more drops. Total drops is 2 + 12 = 14.
+- If the 1st egg does not break again, follow a similar process dropping the 1st egg from floors 34, 45, 55, 64, 72, 79, 85, 90, 94, 97, 99, and 100.
+Regardless of the outcome, it takes at most 14 drops to determine f.
+ 
+
+Constraints:
+
+1 <= n <= 1000
+
+
+Solution in CPP:
+
+class Solution {
+public:
+    int twoEggDrop(int n) {
+        int m = 0;
+        int t = 0;
+        while(t<n)
+        {
+            m+=1;
+            t+=m;
+        }
+        return m;
+    }
+};
+
+
+Explanation:
+
+First declare m(moves) = 0 and t(total) = 0
+
+Then run a loop until t < n is true
+in each iteration increment m(moves) by 1 and add those m(moves) with t(total)
+
+after getting out of the loop return m(moves) and that is the answer(minimum number of attempts)
+
+
+Example 1:
+
+Input: n = 100
+
+First, m = 0, t = 0
+
+Loop:
+iterations,
+
+1) t<n => 0<100 => true
+m = m + 1 = 0 + 1 = 1
+t = t + m = 0 + 1 = 1
+
+2) t<n => 1<100 => true
+m = m + 1 = 1 + 1 = 2
+t = t + m = 1 + 2 = 3
+
+3) t<n => 3<100 => true
+m = m + 1 = 2 + 1 = 3
+t = t + m = 3 + 3 = 6
+
+4) t<n => 6<100 => true
+m = m + 1 = 3 + 1 = 4
+t = t + m = 6 + 4 = 10
+
+5) t<n => 10<100 => true
+m = m + 1 = 4 + 1 = 5
+t = t + m = 10 + 5 = 15
+
+6) t<n => 15<100 => true
+m = m + 1 = 5 + 1 = 6
+t = t + m = 15 + 6 = 21
+
+7) t<n => 21<100 => true
+m = m + 1 = 6 + 1 = 7
+t = t + m = 21 + 7 = 28
+
+8) t<n => 28<100 => true
+m = m + 1 = 7 + 1 = 8
+t = t + m = 28 + 8 = 36
+
+9) t<n => 36<100 => true
+m = m + 1 = 8 + 1 = 9
+t = t + m = 36 + 9 = 45
+
+10) t<n => 45<100 => true
+m = m + 1 = 9 + 1 = 10
+t = t + m = 45 + 10 = 55
+
+11) t<n => 55<100 => true
+m = m + 1 = 10 + 1 = 11
+t = t + m = 55 + 11 = 66
+
+12) t<n => 66<100 => true
+m = m + 1 = 11 + 1 = 12
+t = t + m = 66 + 12 = 78
+
+13) t<n => 78<100 => true
+m = m + 1 = 12 + 1 = 13
+t = t + m = 78 + 13 = 91
+
+14) t<n => 91<100 => true
+m = m + 1 = 13 + 1 = 14
+t = t + m = 91 + 14 = 105
+
+15) t<n => 105<100 => false (exits from loop)
+
+now return m(moves) = 14 and that is the answer 
+
+We reduce the gap each time (x, x-1, x-2, …) so that if the first egg breaks at any step,
+the remaining moves exactly match the floors we must check linearly with the second egg.
+
+This balancing ensures the worst-case number of moves stays the same, 
+which leads to the condition 1 + 2 + 3 + ... + x ≥ n (triangular numbers).
