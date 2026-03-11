@@ -1,0 +1,101 @@
+Leetcode - 866
+
+Link - https://leetcode.com/problems/prime-palindrome/description/
+
+866 - Prime Palindrome
+
+Given an integer n, return the smallest prime palindrome greater than or equal to n.
+
+An integer is prime if it has exactly two divisors: 1 and itself. Note that 1 is not a prime number.
+
+For example, 2, 3, 5, 7, 11, and 13 are all primes.
+An integer is a palindrome if it reads the same from left to right as it does from right to left.
+
+For example, 101 and 12321 are palindromes.
+The test cases are generated so that the answer always exists and is in the range [2, 2 * 108].
+
+ 
+
+Example 1:
+
+Input: n = 6
+Output: 7
+Example 2:
+
+Input: n = 8
+Output: 11
+Example 3:
+
+Input: n = 13
+Output: 101
+ 
+
+Constraints:
+
+1 <= n <= 108
+
+
+Solution in CPP:
+
+class Solution {
+public:
+    int primePalindrome(int n) {
+        int p = 0;
+        if(n<=1)
+        {
+            return 2;
+        }
+        while(p==0)
+        {
+            if((n>1e3 && n<1e4) || (n>1e5 && n<1e6) || (n>1e7 && n<1e8))
+            { 
+                n = pow(10, ceil(log10(n)));;
+                continue;
+            }
+            int f = 1;
+            int k = 1;
+            int x = n;
+            for(int i=2;i*i<=x;i++)
+            {
+                if(x%i==0)
+                {
+                    f = 0;
+                    break;
+                }
+            }
+            if(f==1)
+            {
+                string txt = to_string(x);
+                int l = 0, r = txt.length()-1;
+                if(r%2==0 && x%11==0)
+                {
+                    p = x;
+                    break;
+                }
+                while(l<r)
+                {
+                    if(txt[l]!=txt[r])
+                    {
+                        k = 0;
+                        break;
+                    }
+                    l++;
+                    r--;
+                }
+                if(k==1)
+                {
+                    p = x;
+                    break;
+                }
+            }
+            n = n+1;
+            f = 1;
+            k = 1;
+        }
+        return p;
+    }
+};
+
+
+Explanation:
+
